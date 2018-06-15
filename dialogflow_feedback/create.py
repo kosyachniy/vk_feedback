@@ -1,61 +1,157 @@
-# https://dialogflow.com/docs/reference/api-v2/rest/v2/projects.agent.intents/create
+# https://dialogflow.com/docs/reference/agent/intents
 
-import requests
-from enum import Enum
+import requests, json
 
-link = 'https://dialogflow.googleapis.com/v2/dialogflow.intents.create/intents'
+with open('keys.json', 'r') as file:
+	developer_token_dialogflow = json.loads(file.read())['developer_token_dialogflow']
 
-params = {
-	'languageCode': 'ru',
-	# 'intentView': Enum(),
+link = 'https://api.dialogflow.com/v1/intents?v=20150910'
+
+headers = {
+	'Authorization': 'Bearer ' + developer_token_dialogflow,
+	'Content-Type': 'application/json',
 }
 
-cont = {
-	'name': '1.test',
-	'displayName': '1.test',
-	'webhookState': {'WebhookState': 'WEBHOOK_STATE_UNSPECIFIED'},
-	# 'priority': number,
-	# 'isFallback': boolean,
-	# 'mlDisabled': boolean,
-	# 'inputContextNames': [
-	# 	string
-	# ],
-	# 'events': [
-	# 	string
-	# ],
-	# 'trainingPhrases': [
-	# 	{
-	# 		object(TrainingPhrase)
-	# 	}
-	# ],
-	# 'action': string,
-	# 'outputContexts': [
-	# 	{
-	# 		object(Context)
-	# 	}
-	# ],
-	# 'resetContexts': boolean,
-	# 'parameters': [
-	# 	{
-	# 		object(Parameter)
-	# 	}
-	# ],
-	# 'messages': [
-	# 	{
-	# 		object(Message)
-	# 	}
-	# ],
-	# 'defaultResponsePlatforms': [
-	# 	enum(Platform)
-	# ],
-	# 'rootFollowupIntentName': string,
-	# 'parentFollowupIntentName': string,
-	# 'followupIntentInfo': [
-	# 	{
-	# 		object(FollowupIntentInfo)
-	# 	}
-	# ],
-}
+def add(intent):
+	print(intent['question'])
 
-cont = requests.post(link, params=params, json=cont)
-print(cont.text)
+	cont = {
+		'contexts': [],
+		'events': [],
+		'fallbackIntent': False,
+		'name': 'faq.%s.%s.%d' % (intent['section'], intent['category_id'], intent['id']),
+		'priority': 500000,
+		'responses': [
+			{
+				'action': 'add.list',
+				'affectedContexts': [],
+				'parameters': [],
+				'defaultResponsePlatforms': {},
+				'messages': [
+					{
+						'speech': intent['answer'],
+						'type': 0,
+					}
+				],
+				'resetContexts': False,
+			}
+		],
+		'userSays': [{
+			'data': [{
+				'text': intent['question'],
+        	}],
+			'isTemplate': False,
+			'isAuto': False,
+		}],
+		'templates': [],
+		'webhookForSlotFilling': False,
+		'webhookUsed': False,
+	}
+
+	requests.post(link, headers=headers, json=cont)
+
+with open('answers.json', 'r') as file:
+	for i in file:
+		add(json.loads(i))
+
+# cont = {
+# 	'contexts': [
+# 		'shop'
+# 	],
+# 	'events': [],
+# 	'fallbackIntent': False,
+# 	'name': 'add-to-list',
+# 	'priority': 500000,
+# 	'responses': [
+# 		{
+# 			'action': 'add.list',
+# 			'affectedContexts': [
+# 				{
+# 					'lifespan': 5,
+# 					'name': 'shop',
+# 					'parameters': {}
+# 				},
+# 				{
+# 					'lifespan': 5,
+# 					'name': 'chosen-fruit',
+# 					'parameters': {}
+# 				}
+# 			],
+# 			'defaultResponsePlatforms': {
+# 				'google': True
+# 			},
+# 			'messages': [
+# 				{
+# 					'platform': 'google',
+# 					'textToSpeech': 'Okay. How many $fruit?',
+# 					'type': 'simple_response'
+# 				},
+# 				{
+# 					'speech': 'Okay how many $fruit?',
+# 					'type': 0
+# 				}
+# 			],
+# 			'parameters': [
+# 				{
+# 					'dataType': '@fruit',
+# 					'isList': True,
+# 					'name': 'fruit',
+# 					'prompts': [
+# 						'I didn\'t get that. What fruit did you want?'
+# 					],
+# 					'required': True,
+# 					'value': '$fruit'
+# 				}
+# 			],
+# 			'resetContexts': False
+# 		}
+# 	],
+# 	'templates': [
+# 		'@fruit:fruit ',
+# 		'Add @fruit:fruit ',
+# 		'I need @fruit:fruit '
+# 	],
+# 	'userSays': [
+# 		{
+# 			'count': 0,
+# 			'data': [
+# 				{
+# 					'alias': 'fruit',
+# 					'meta': '@fruit',
+# 					'text': 'oranges',
+# 					'userDefined': True
+# 				}
+# 			]
+# 		},
+# 		{
+# 			'count': 0,
+# 			'data': [
+# 				{
+# 					'text': 'Add '
+# 				},
+# 				{
+# 					'alias': 'fruit',
+# 					'meta': '@fruit',
+# 					'text': 'bananas',
+# 					'userDefined': True
+# 				}
+# 			]
+# 		},
+# 		{
+# 			'count': 0,
+# 			'data': [
+# 				{
+# 					'text': 'I need '
+# 				},
+# 				{
+# 					'alias': 'fruit',
+# 					'meta': '@fruit',
+# 					'text': 'apples',
+# 					'userDefined': True
+# 				}
+# 			]
+# 		}
+# 	],
+# 	'webhookForSlotFilling': False,
+# 	'webhookUsed': False,
+# }
