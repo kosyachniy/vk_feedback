@@ -1,10 +1,13 @@
 # Бот поддержки ВКонтакте
 
+Ссылка на бота: [https://vk.com/feedbacked](https://vk.com/feedbacked)
+
+![Заставка ВКонтакте](about/vk_feedback.jpg)
+
 Замысел:
 1. Выкачать наиболее частые вопросы со страницы поддержки ВК
-2. Написать ботов разными методами
-3. Сравнить эффективность
-4. Запустить бота ВКонтакте
+2. Написать бота для быстрого ответа на астые вопросы
+3. Запустить бота ВКонтакте
 
 Базовые статьи:
 1. [DialogFlow](https://habr.com/post/346606/)
@@ -27,7 +30,7 @@
 
 ## Этап 2
 
-### Метод 1. DialogFlow
+### DialogFlow
 
 ![Обучение DialogFlow](about/dialogflow_2.png)
 
@@ -35,8 +38,14 @@
 
 В файле ``` dialogflow_main.py ``` содержится код для получения ответов по обученным данным. В случае если ответ не найден, то вопрос сохраняется, а пользователя перенаправляют на подробное описание проблемы.
 
+Попутные статьи:
+1. [Google API](https://cloud.google.com/dialogflow-enterprise/docs/reference/rest/v2beta1/projects.agent.intents/create)
+2. [DialogFlow API](https://dialogflow.com/docs/reference/agent/intents)
+
 
 ## Этап 3
 
-## Этап 4
+Файл ``` bot.py ``` запускает [бота](https://vk.com/feedbacked).
 
+Пример работы на некоторых обученных данных, которых изначально не было:
+![Сообщения](about/vk_messages.png)

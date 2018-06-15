@@ -23,7 +23,6 @@ def add(intent):
 		'priority': 500000,
 		'responses': [
 			{
-				'action': 'add.list',
 				'affectedContexts': [],
 				'parameters': [],
 				'defaultResponsePlatforms': {},

@@ -10,8 +10,8 @@ def answer(text):
 	request.query = text
 	response_json = json.loads(request.getresponse().read().decode('utf-8'))
 
-	print(response_json)
-	print('-'*100)
+	# print(response_json)
+	# print('-' * 100)
 
 	return response_json['result']['fulfillment']['speech']
 
